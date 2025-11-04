@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tags - TechWatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="left">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" class="logo-icon">
+            <button class="search-btn">
+                Recherche<br><span>d’article</span>
+            </button>
+            <a href="{{ url_for('tags') }}" class="nav-link active">Tags</a>
+        </div>
+        <a href="#" class="login-link">Se<br><span>connecter</span></a>
+    </header>
+
+    <main class="tags-page">
+        <div class="top-tags">
+            <h1>Tags populaires</h1>
+            <div class="search-bar">
+                <label for="tag-search">Rechercher :</label>
+                <input type="text" id="tag-search" placeholder="#">
+            </div>
+        </div>
+
+        <div class="tags-grid">
+            {% for tag in tags %}
+            <div class="tag-card">
+                <h2>{{ tag.name }}</h2>
+                <p>{{ tag.desc }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-left">
+            <a href="{{ url_for('mentions_legales') }}">Mentions légales</a> -
+            <a href="{{ url_for('cookies') }}">Cookies</a>
+        </div>
+        <div class="footer-right">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" class="footer-logo">
+        </div>
+    </footer>
+</body>
+</html>

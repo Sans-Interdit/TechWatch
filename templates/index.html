@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>TechWatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="left">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" class="logo-icon">
+            <button class="search-btn">
+                Recherche<br><span>d’article</span>
+            </button>
+            <a href="{{ url_for('tags') }}" class="nav-link">Tags</a>
+        </div>
+        <a href="#" class="login-link">Se<br><span>connecter</span></a>
+    </header>
+
+    <main>
+        <div class="top-bar">
+            <h1>Tous les articles</h1>
+            <div class="tag">Tag : <span>#webdev</span></div>
+        </div>
+    </main>
+
+    <div class="articles">
+        {% for article in articles %}
+        <a href="{{ url_for('article', article_id=article.id) }}" class="article-link">
+            <div class="article {{ 'read' if article.read else '' }}">
+                <div>
+                    <h2>{{ article.title }}</h2>
+                    <p>{{ article.desc }}</p>
+                </div>
+                <button class="read-btn {{ 'checked' if article.read else '' }}">
+                    {{ 'Lu ✔️' if article.read else 'Lu' }}
+                </button>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- === FOOTER === -->
+    <footer>
+        <div class="footer-left">
+            <a href="{{ url_for('mentions_legales') }}">Mentions légales</a> -
+            <a href="{{ url_for('cookies') }}">Cookies</a>
+        </div>
+        <div class="footer-right">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" class="footer-logo">
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
