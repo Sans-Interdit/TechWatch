@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask_cors import CORS
 from data.models import Account, Article, Tag, session
+import requests
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:8000", "http://127.0.0.1:8000"])
@@ -27,7 +28,18 @@ def home():
 
 @app.route('/article/<int:article_id>')
 def article(article_id):
-    return render_template('article.html', article_id=article_id)
+
+    response = requests.get(f"https://dev.to/api/articles/{article_id}?per_page=1")
+    response.raise_for_status()
+    api_tags = response.json()
+
+    article = {
+        "title": api_tags['title'],
+        # "cover_image": api_tags.get('cover_image', ''), si on veut rajouter des images à un moment
+        "body_html": api_tags.get('body_html', ''),
+    }
+
+    return render_template('article.html', article=article)
 
 @app.route('/tags')
 def tags():

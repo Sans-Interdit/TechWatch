@@ -19,11 +19,9 @@
     </header>
 
     <main class="article-page">
-        <h1>Article #{{ article_id }}</h1>
-        <p class="desc">Aperçu du contenu de l’article sélectionné...</p>
+        <h1>{{ article.title }}</h1>
         <div class="content">
-            <p>Voici le contenu complet de l’article numéro {{ article_id }}.  
-            Tu peux y insérer du texte, des images, des citations ou tout autre contenu éditorial.</p>
+            {{ article.body_html | safe }}
         </div>
         <a href="{{ url_for('home') }}" class="back-btn">← Retour</a>
     </main>
