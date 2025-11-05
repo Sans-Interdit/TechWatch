@@ -31,11 +31,12 @@ def article(article_id):
 
 @app.route('/tags')
 def tags():
-    tags_list = [
-        {"name": "webdev", "desc": "Because the internet..."},
-        {"name": "javascript", "desc": "Once relegated to the browser as one of the 3..."},
-        {"name": "programming", "desc": "The magic behind computers. 💻 ✏️"},
-    ] * 5
+    per_page = 100
+
+    tags = session.query(Tag).limit(per_page).all()
+
+    tags_list = [tag.to_dict() for tag in tags]
+
     return render_template('tags.html', tags=tags_list)
 
 @app.route('/mentions-legales')

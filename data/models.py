@@ -58,6 +58,13 @@ class Tag(Base):
     name = Column(String(50), unique=True, nullable=False)
     description = Column(String(255))
 
+    def to_dict(self):
+        return {
+            "id": self.id_tag,
+            "name": self.name,
+            "desc": self.description,
+        }
+
 
 engine = create_engine(DATABASE_URL)
 
