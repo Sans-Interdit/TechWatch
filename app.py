@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from data.models import Account, Article, Tag, session
 import requests
@@ -10,7 +10,16 @@ CORS(app, origins=["http://localhost:8000", "http://127.0.0.1:8000"])
 def home():
     per_page = 30
     
-    articles = session.query(Article).limit(per_page).all()
+    query = session.query(Article)
+    
+    tag_query = request.args.get('q', '').strip()  # récupération du tag recherché
+
+    if tag_query:
+        # Jointure avec Tag via la table d’association 'possess'
+        query = query.join(Article.tags).filter(Tag.name.ilike(f"%{tag_query}%"))
+    
+    articles = query.limit(per_page).all()
+    
     article_list = []
     for article in articles:
         # TODO : implémenter un truc du genre quand les comptes utilisateurs seront gérés
@@ -50,6 +59,20 @@ def tags():
     tags_list = [tag.to_dict() for tag in tags]
 
     return render_template('tags.html', tags=tags_list)
+
+@app.route('/api/tags/search')
+def search_tags():
+    query = request.args.get('q', '').strip()
+    results = []
+
+    if query:
+        tags = session.query(Tag).filter(Tag.name.ilike(f"%{query}%")).limit(50).all()
+        results = [tag.to_dict() for tag in tags]
+    else:
+        tags = session.query(Tag).limit(50).all()
+        results = [tag.to_dict() for tag in tags]
+
+    return jsonify(results)
 
 @app.route('/mentions-legales')
 def mentions_legales():

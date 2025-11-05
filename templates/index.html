@@ -21,7 +21,17 @@
     <main>
         <div class="top-bar">
             <h1>Tous les articles</h1>
-            <div class="tag">Tag : <span>#webdev</span></div>
+            <form class="search-bar" method="get" action="/">
+                <label for="article-search">Tag :</label>
+                <input
+                    type="text"
+                    id="article-search"
+                    name="q"
+                    placeholder="webdev"
+                    value="{{ tag_query }}"
+                >
+                <button type="submit">🔍</button>
+            </form>
         </div>
     </main>
 
