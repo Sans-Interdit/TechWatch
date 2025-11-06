@@ -15,12 +15,12 @@
             </button>
             <a href="{{ url_for('tags') }}" class="nav-link">Tags</a>
         </div>
-        <a href="#" class="login-link">Se<br><span>connecter</span></a>
+        <a href="{{ url_for('login') }}" class="login-link">Se<br><span>connecter</span></a>
     </header>
 
     <main>
         <div class="top-bar">
-            <h1>Tous les articles</h1>
+            <h1>{{"Articles à propos de \"" + tag_query + "\"" if tag_query else "Tous les articles"}}</h1>
             <form class="search-bar" method="get" action="/">
                 <label for="article-search">Tag :</label>
                 <input

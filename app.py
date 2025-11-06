@@ -1,10 +1,42 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_cors import CORS
 from data.models import Account, Article, Tag, session
 import requests
+import jwt
+import os
+from functools import wraps
+import bcrypt
+import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:8000", "http://127.0.0.1:8000"])
+
+def token_required(f):
+    """
+    Decorator that requires JWT authentication.
+    Validates the token and checks for expiration.
+    """
+
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get("Authorization")
+        if not token:
+            return jsonify({"error": "Token is missing"}), 401
+
+        try:
+            data = jwt.decode(token, os.getenv("HASH_KEY"), algorithms=["HS256"])
+            request.user_id = data["id"]
+        except jwt.ExpiredSignatureError:
+            return jsonify({"error": "Token has expired"}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({"error": "Invalid token"}), 401
+
+        return f(*args, **kwargs)
+
+    return decorated
 
 @app.route('/')
 def home():
@@ -19,7 +51,7 @@ def home():
         query = query.join(Article.tags).filter(Tag.name.ilike(f"%{tag_query}%"))
     
     articles = query.limit(per_page).all()
-    
+
     article_list = []
     for article in articles:
         # TODO : implémenter un truc du genre quand les comptes utilisateurs seront gérés
@@ -33,7 +65,7 @@ def home():
         article_dict['read'] = False
         article_list.append(article_dict)
 
-    return render_template('index.html', articles=article_list)
+    return render_template('index.html', articles=article_list, tag_query=tag_query)
 
 @app.route('/article/<int:article_id>')
 def article(article_id):
@@ -73,6 +105,68 @@ def search_tags():
         results = [tag.to_dict() for tag in tags]
 
     return jsonify(results)
+
+@app.route('/log', methods=['POST'])
+def log():
+    email = request.form['email']
+    password = request.form['password']
+
+    account = session.query(Account).filter_by(email=email).first()
+
+    if not account or not bcrypt.checkpw(password.encode("utf-8"), account.password.encode("utf-8")):
+        return jsonify({"error": "Identifiants invalides"}), 401
+
+    return get_token(account)
+
+def get_token(account):
+    """
+    Generates a JWT token for an authenticated user account.
+    """
+    payload = {
+        "id": account.id_account,
+        "email": account.email,
+        "exp": datetime.datetime.now() + datetime.timedelta(hours=1),
+    }
+
+    token = jwt.encode(payload, os.getenv("HASH_KEY"), algorithm="HS256")
+    return jsonify({"token": token}), 200
+
+@app.route("/create_account", methods=["POST"])
+def create_account():
+    """
+    Registers a new user with an email and a hashed password.
+    Returns a JWT token upon successful registration.
+    """
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    if not email or not password:
+        return jsonify({"error": "Identifiants invalides"}), 400
+
+    existing_user = session.query(Account).filter_by(email=email).first()
+    if existing_user:
+        return jsonify({"error": "Cet email est déjà utilisé"}), 409
+
+    hashed_password = bcrypt.hashpw(
+        password.encode("utf-8"), bcrypt.gensalt()
+    ).decode("utf-8")
+
+    new_account = Account(
+        email=email,
+        password=hashed_password,
+    )
+    session.add(new_account)
+    session.commit()
+
+    return get_token(new_account)
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/register')
+def register():
+    return render_template('register.html')
 
 @app.route('/mentions-legales')
 def mentions_legales():
