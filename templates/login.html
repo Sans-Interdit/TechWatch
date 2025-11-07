@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Se connecter / S’inscrire - TechWatch{% endblock %}
+{% block content %}
+<main class="contact-page">
+    <h1>Connexion / Inscription</h1>
+
+    <form id="signup-form" method="POST">
+        <input type="email" name="email" placeholder="Adresse email" required>
+        <input type="password" name="password" placeholder="Mot de passe" required>
+        <input type="password" name="password_confirm" placeholder="Confirmer le mot de passe" required>
+        
+        <label style="display:flex; align-items:center; gap:10px; font-size:14px;">
+            <input type="checkbox" name="consent" id="consent" required>
+            J’accepte que mes données soient sauvegardées
+        </label>
+
+        <button type="submit">S’inscrire / Se connecter</button>
+    </form>
+</main>
+
+<script>
+document.getElementById('signup-form').addEventListener('submit', function(event) {
+    const pwd = document.querySelector('input[name="password"]').value;
+    const pwdConfirm = document.querySelector('input[name="password_confirm"]').value;
+    const consent = document.getElementById('consent').checked;
+
+    if (pwd !== pwdConfirm) {
+        alert("Les mots de passe ne correspondent pas !");
+        event.preventDefault();
+        return false;
+    }
+
+    if (!consent) {
+        alert("Vous devez accepter que vos données soient sauvegardées.");
+        event.preventDefault();
+        return false;
+    }
+});
+</script>
+{% endblock %}

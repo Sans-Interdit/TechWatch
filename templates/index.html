@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}TechWatch - Accueil{% endblock %}
+{% block content %}
+<main>
+    <div class="top-bar">
+        <h1>Tous les articles</h1>
+        <div class="tag">Tag : <span>#webdev</span></div>
+    </div>
+
+    <div class="articles">
+        {% for article in articles %}
+        <div class="article" onclick="window.location.href='{{ url_for('article', article_id=loop.index0) }}'">
+            <div>
+                <h2>{{ article.title }}</h2>
+                <p>{{ article.desc }}</p>
+            </div>
+            <button class="read-btn {{ 'checked' if article.read else '' }}">
+                Lu {{ '✔️' if article.read else '' }}
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

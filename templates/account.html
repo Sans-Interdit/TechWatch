@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Mon compte - TechWatch{% endblock %}
+{% block content %}
+<main class="contact-page">
+    <h1>Mon compte</h1>
+    <p style="text-align:center; font-size: 20px; margin-bottom:30px;">{{ user }}</p>
+
+    <div style="display:flex; justify-content:center; gap:20px;">
+        <a href="{{ url_for('logout') }}">
+            <button>Déconnexion</button>
+        </a>
+        <a href="{{ url_for('delete_account') }}">
+            <button style="background-color: #FF6B6B; color:white;">Supprimer mon compte</button>
+        </a>
+    </div>
+</main>
+{% endblock %}
