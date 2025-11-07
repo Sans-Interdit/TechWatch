@@ -1,0 +1,124 @@
+:root {
+    --beige: #F5F5DC;
+    --bleu-fonce: #1D3987;
+    --bleu-clair: #B7C7F5;
+    --marron: #C4A484;
+}
+
+/* Position du bouton flottant */
+#chatbot-open-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--bleu-clair);
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+#chatbot-open-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Conteneur principal du chatbot */
+#chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Quand le chatbot est réduit */
+#chatbot-container.chatbot-collapsed {
+    display: none;
+}
+
+/* En-tête */
+#chatbot-header {
+    background: var(--bleu-fonce);
+    color: rgb(255, 255, 255);
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Zone des messages */
+#chatbot-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background: var(--bleu-clair);
+    overflow-y: auto;
+}
+
+#chatbot-messages {
+    flex: 1;
+    flex-direction: column;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+#chatbot-input {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+/* .message.bot {
+    background: linear-gradient(135deg, #a8a2ff 0%, #928AFF 100%);
+    color: #000000;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    margin-right: auto;
+}
+
+.message.user {
+    background: linear-gradient(135deg, #fff066 0%, #ffde5b 100%);
+    color: #000000;
+    align-self: flex-end;
+    text-align: right;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+} */
+
+.message {
+    color: #000000;
+    text-align: justify;
+    position: relative;
+}
+
+
+/* Style du spinner */
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  animation: spin 1s linear infinite;
+  margin: 10px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Centrage du spinner */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}

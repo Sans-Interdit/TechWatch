@@ -8,11 +8,22 @@ from functools import wraps
 import bcrypt
 import datetime
 from dotenv import load_dotenv
+from huggingface_hub import InferenceClient
+import asyncio
+from googletrans import Translator
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:8000", "http://127.0.0.1:8000"])
+
+chatbot_key = os.getenv("KEY")
+
+client = InferenceClient(
+    provider="hf-inference",
+    api_key=chatbot_key,
+)
+
 
 def token_required(f):
     """
@@ -37,6 +48,96 @@ def token_required(f):
         return f(*args, **kwargs)
 
     return decorated
+
+@app.route('/log', methods=['POST'])
+def log():
+    email = request.form['email']
+    password = request.form['password']
+
+    account = session.query(Account).filter_by(email=email).first()
+
+    if not account or not bcrypt.checkpw(password.encode("utf-8"), account.password.encode("utf-8")):
+        return jsonify({"error": "Identifiants invalides"}), 401
+
+    return get_token(account)
+
+def get_token(account):
+    """
+    Generates a JWT token for an authenticated user account.
+    """
+    payload = {
+        "id": account.id_account,
+        "email": account.email,
+        "exp": datetime.datetime.now() + datetime.timedelta(hours=1),
+    }
+
+    token = jwt.encode(payload, os.getenv("HASH_KEY"), algorithm="HS256")
+    return jsonify({"token": token}), 200
+
+@app.route("/create_account", methods=["POST"])
+def create_account():
+    """
+    Registers a new user with an email and a hashed password.
+    Returns a JWT token upon successful registration.
+    """
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    if not email or not password:
+        return jsonify({"error": "Identifiants invalides"}), 400
+
+    existing_user = session.query(Account).filter_by(email=email).first()
+    if existing_user:
+        return jsonify({"error": "Cet email est déjà utilisé"}), 409
+
+    hashed_password = bcrypt.hashpw(
+        password.encode("utf-8"), bcrypt.gensalt()
+    ).decode("utf-8")
+
+    new_account = Account(
+        email=email,
+        password=hashed_password,
+    )
+    session.add(new_account)
+    session.commit()
+
+    return get_token(new_account)
+
+@app.route("/summary", methods=["POST"])
+def summary():
+    article = request.json.get("article")
+
+    def chunk_text(text, max_words=500):
+        words = text.split()
+        for i in range(0, len(words), max_words):
+            yield " ".join(words[i:i+max_words])
+
+    summaries = []
+
+    for chunk in chunk_text(article, max_words=500):
+        summary = client.summarization(
+            chunk,
+            model="sshleifer/distilbart-cnn-12-6",
+        )
+        summaries.append(summary['summary_text'])
+
+    # Résumé final : concatène les résumés puis éventuellement résume à nouveau
+    final_summary_text = " ".join(summaries)
+    final_summary = client.summarization(
+        final_summary_text,
+        model="sshleifer/distilbart-cnn-12-6",
+    )
+
+    translator = Translator()
+
+    # Fonction pour traduire
+    async def traduire_texte(texte):
+        result = await translator.translate(texte, dest='fr')
+        return result.text
+
+    translated_summary = asyncio.run(traduire_texte(final_summary['summary_text']))
+
+    return jsonify({'response': translated_summary}), 200
 
 @app.route('/')
 def home():
@@ -105,60 +206,6 @@ def search_tags():
         results = [tag.to_dict() for tag in tags]
 
     return jsonify(results)
-
-@app.route('/log', methods=['POST'])
-def log():
-    email = request.form['email']
-    password = request.form['password']
-
-    account = session.query(Account).filter_by(email=email).first()
-
-    if not account or not bcrypt.checkpw(password.encode("utf-8"), account.password.encode("utf-8")):
-        return jsonify({"error": "Identifiants invalides"}), 401
-
-    return get_token(account)
-
-def get_token(account):
-    """
-    Generates a JWT token for an authenticated user account.
-    """
-    payload = {
-        "id": account.id_account,
-        "email": account.email,
-        "exp": datetime.datetime.now() + datetime.timedelta(hours=1),
-    }
-
-    token = jwt.encode(payload, os.getenv("HASH_KEY"), algorithm="HS256")
-    return jsonify({"token": token}), 200
-
-@app.route("/create_account", methods=["POST"])
-def create_account():
-    """
-    Registers a new user with an email and a hashed password.
-    Returns a JWT token upon successful registration.
-    """
-    email = request.form.get("email")
-    password = request.form.get("password")
-
-    if not email or not password:
-        return jsonify({"error": "Identifiants invalides"}), 400
-
-    existing_user = session.query(Account).filter_by(email=email).first()
-    if existing_user:
-        return jsonify({"error": "Cet email est déjà utilisé"}), 409
-
-    hashed_password = bcrypt.hashpw(
-        password.encode("utf-8"), bcrypt.gensalt()
-    ).decode("utf-8")
-
-    new_account = Account(
-        email=email,
-        password=hashed_password,
-    )
-    session.add(new_account)
-    session.commit()
-
-    return get_token(new_account)
 
 @app.route('/login')
 def login():
