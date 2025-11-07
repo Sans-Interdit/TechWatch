@@ -1,9 +1,14 @@
-// Marquer un article comme lu visuellement quand on clique dessus
 document.addEventListener('DOMContentLoaded', () => {
     const articles = document.querySelectorAll('.article');
+
     articles.forEach(article => {
         article.addEventListener('click', () => {
-            article.classList.add('read');
+            // Récupère le bouton "Lu" dans l'article cliqué
+            const readBtn = article.querySelector('.read-btn');
+            if (readBtn) {
+                readBtn.classList.add('checked');
+                readBtn.textContent = "Lu ✔️"; // ajoute le texte ✔️ si nécessaire
+            }
         });
     });
 });
@@ -28,48 +33,48 @@ if (searchInput) {
     });
 }
 
-const loginForm = document.getElementById('loginForm')
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
+// const loginForm = document.getElementById('loginForm')
+// if (loginForm) {
+//     loginForm.addEventListener('submit', async (e) => {
+//     e.preventDefault();
+//     const formData = new FormData(e.target);
     
-    const response = await fetch('/log', {
-        method: 'POST',
-        body: formData
-    });
+//     const response = await fetch('/log', {
+//         method: 'POST',
+//         body: formData
+//     });
     
-    const data = await response.json();
+//     const data = await response.json();
     
-    if (data.token) {
-        localStorage.setItem('token', data.token);
-        window.location.href = '/';
-    } else {
-        console.log(data)
-        document.getElementById('error').textContent = data.error;
-    }
-    });
-}
+//     if (data.token) {
+//         localStorage.setItem('token', data.token);
+//         window.location.href = '/';
+//     } else {
+//         console.log(data)
+//         document.getElementById('error').textContent = data.error;
+//     }
+//     });
+// }
 
-const registerForm = document.getElementById('registerForm')
-if (registerForm) {
-    registerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
+// const registerForm = document.getElementById('registerForm')
+// if (registerForm) {
+//     registerForm.addEventListener('submit', async (e) => {
+//     e.preventDefault();
+//     const formData = new FormData(e.target);
     
-    const response = await fetch('/create_account', {
-        method: 'POST',
-        body: formData
-    });
+//     const response = await fetch('/create_account', {
+//         method: 'POST',
+//         body: formData
+//     });
     
-    const data = await response.json();
+//     const data = await response.json();
     
-    if (data.token) {
-        localStorage.setItem('token', data.token);
-        window.location.href = '/';
-    } else {
-        console.log(data)
-        document.getElementById('error').textContent = data.error;
-    }
-    });
-}
+//     if (data.token) {
+//         localStorage.setItem('token', data.token);
+//         window.location.href = '/';
+//     } else {
+//         console.log(data)
+//         document.getElementById('error').textContent = data.error;
+//     }
+//     });
+// }

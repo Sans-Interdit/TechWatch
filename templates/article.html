@@ -1,51 +1,24 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Article</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
-</head>
-<body>
-    <header>
-        <div class="left">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" class="logo-icon">
-            <button class="search-btn">
-                Recherche<br><span>d’article</span>
-            </button>
-            <a href="{{ url_for('tags') }}" class="nav-link">Tags</a>
-        </div>
-        <a href="#" class="login-link">Se<br><span>connecter</span></a>
-    </header>
-
-    <main class="article-page" id="article">
-        <h1>{{ article.title }}</h1>
-        <div class="content">
-            {{ article.body_html | safe }}
-        </div>
-        <a href="{{ url_for('home') }}" class="back-btn">← Retour</a>
-    </main>
-    <!-- Chatbot flottant -->
-    <div id="chatbot-container" class="chatbot-collapsed">
-        <div id="chatbot-header">
-            <span>💬 Résumé</span>
-            <button id="chatbot-toggle" aria-label="Réduire le chatbot">–</button>
-        </div>
-        <div id="chatbot-body">
-
-        </div>
+{% extends "base.html" %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
+<main class="article-page" id="article">
+    <h1>{{ article.title }}</h1>
+    <div class="content">
+        {{ article.body_html | safe }}
     </div>
-    <button id="chatbot-open-btn" aria-label="Ouvrir le chatbot">Résumé</button>
-    <footer>
-        <div class="footer-left">
-            <a href="{{ url_for('mentions_legales') }}">Mentions légales</a> -
-            <a href="{{ url_for('cookies') }}">Cookies</a>
-        </div>
-        <div class="footer-right">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" class="footer-logo">
-        </div>
-    </footer>
-    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
-</body>
-</html>
+    <a href="{{ url_for('home') }}" class="back-btn">⬅ Retour</a>
+</main>
+<!-- Chatbot flottant -->
+<div id="chatbot-container" class="chatbot-collapsed">
+    <div id="chatbot-header">
+        <span>Résumé par IA</span>
+        <button id="chatbot-toggle" aria-label="Réduire le chatbot">–</button>
+    </div>
+    <div id="chatbot-body">
+
+    </div>
+</div>
+<button id="chatbot-open-btn" aria-label="Ouvrir le chatbot">Je veux un résumé par IA</button>
+<script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+{% endblock %}

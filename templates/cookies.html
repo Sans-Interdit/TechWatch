@@ -1,41 +1,31 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Cookies - TechWatch</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <header>
-        <div class="left">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" class="logo-icon">
-            <button class="search-btn">
-                Recherche<br><span>d’article</span>
-            </button>
-            <a href="{{ url_for('tags') }}" class="nav-link">Tags</a>
-        </div>
-        <a href="#" class="login-link">Se<br><span>connecter</span></a>
-    </header>
+{% extends "base.html" %}
+{% block title %}Cookies - TechWatch{% endblock %}
+{% block content %}
+<main class="article-page">
+    <h1>Politique de cookies</h1>
+    <div class="content">
+        <h2>Introduction</h2>
+        <p>Notre site TechWatch utilise des « cookies » afin d’améliorer votre navigation, personnaliser votre expérience et proposer des contenus adaptés à vos centres d’intérêt. Un cookie est un petit fichier texte déposé sur votre terminal lors de la consultation du site. :contentReference[oaicite:0]{index=0}</p>
 
-    <main class="article-page">
-        <h1>Cookies</h1>
-        <div class="content">
-            <p>Les cookies permettent de mesurer la fréquentation du site et d’améliorer l’expérience utilisateur.  
-            Leur utilisation est soumise à votre consentement conformément au RGPD.  
-            Vous pouvez à tout moment les accepter, les refuser ou les paramétrer.</p>
-        </div>
-        <a href="{{ url_for('home') }}" class="back-btn">← Retour</a>
-    </main>
+        <h2>Quels types de cookies utilisons-nous ?</h2>
+        <ul>
+            <li><strong>Cookies strictement nécessaires :</strong> ils permettent l’utilisation du site (ex : session de connexion).</li>
+            <li><strong>Cookies de performance :</strong> ils nous permettent de mesurer l’audience.</li>
+            <li><strong>Cookies de fonctionnalités :</strong> ils memorisent vos choix (thème, langue…).</li>
+            <li><strong>Cookies publicitaires/marketing :</strong> ils sont utilisés pour proposer des contenus ou publicités adaptées.</li>
+        </ul>
 
-    <footer>
-        <div class="footer-left">
-            <a href="{{ url_for('mentions_legales') }}">Mentions légales</a> -
-            <a href="{{ url_for('cookies') }}">Cookies</a>
-        </div>
-        <div class="footer-right">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" class="footer-logo">
-        </div>
-    </footer>
-</body>
-</html>
+        <h2>Consentement et gestion</h2>
+        <p>Lors de votre première visite, une bannière vous informe des cookies utilisés. Vous pouvez à tout moment modifier vos choix via les paramètres de votre navigateur ou en cliquant sur « Paramètres cookies » en bas de page.</p>
+
+        <h2>Durée de conservation</h2>
+        <p>Les cookies restent actifs pour une durée variable. Les cookies de session sont supprimés lorsque vous fermez votre navigateur. Les autres cookies ont une durée maximale de 13 mois.</p>
+
+        <h2>Vos droits</h2>
+        <p>Vous disposez d’un droit d’accès, de rectification, d’effacement, d’opposition, de limitation du traitement de vos données personnelles. Pour exercer ces droits, contactez : contact@techwatch.fr</p>
+
+        <h2>Modification de la politique</h2>
+        <p>TechWatch se réserve le droit de modifier cette politique de cookies à tout moment. La version en ligne est la seule version opposable.</p>
+    </div>
+</main>
+{% endblock %}

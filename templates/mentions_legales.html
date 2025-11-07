@@ -1,40 +1,32 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Mentions légales - TechWatch</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <header>
-        <div class="left">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" class="logo-icon">
-            <button class="search-btn">
-                Recherche<br><span>d’article</span>
-            </button>
-            <a href="{{ url_for('tags') }}" class="nav-link">Tags</a>
-        </div>
-        <a href="#" class="login-link">Se<br><span>connecter</span></a>
-    </header>
+{% extends "base.html" %}
+{% block title %}Mentions légales - TechWatch{% endblock %}
+{% block content %}
+<main class="article-page">
+    <h1>Mentions légales</h1>
+    <div class="content">
+        <p>En vertu de l’article 6 de la loi n°2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique, dite « LCEN », il est précisé aux utilisateurs du site TechWatch l’identité des différents intervenants dans le cadre de sa réalisation et de son suivi :</p>
 
-    <main class="article-page">
-        <h1>Mentions légales</h1>
-        <div class="content">
-            <p>Les mentions légales sont obligatoires pour identifier l’éditeur, l’hébergeur et le responsable de publication d’un site web.  
-            Elles assurent la transparence, la responsabilité et la conformité avec la loi française, notamment la loi LCEN.</p>
-        </div>
-        <a href="{{ url_for('home') }}" class="back-btn">← Retour</a>
-    </main>
+        <h2>Éditeur du site</h2>
+        <p>TechWatch – 123 Rue de la Technologie, 75000 Paris<br>
+           SIRET : 000 000 000 00000<br>
+           Directeurs de la publication : Yanis et Thomas<br>
+           Contact : contact@techwatch.fr</p>
 
-    <footer>
-        <div class="footer-left">
-            <a href="{{ url_for('mentions_legales') }}">Mentions légales</a> -
-            <a href="{{ url_for('cookies') }}">Cookies</a>
-        </div>
-        <div class="footer-right">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" class="footer-logo">
-        </div>
-    </footer>
-</body>
-</html>
+        <h2>Hébergement</h2>
+        <p>Hébergeur : HébergeWeb – 10 Avenue du Web, 75000 Paris<br>
+           Téléphone : 01 23 45 67 89</p>
+
+        <h2>Propriété intellectuelle</h2>
+        <p>L’ensemble de ce site est la propriété intellectuelle exclusive de TechWatch. Toute reproduction, représentation, adaptation totale ou partielle de ce site, par quelque procédé que ce soit, sans l’autorisation écrite préalable de TechWatch, est strictement interdite.</p>
+
+        <h2>Protection des données personnelles</h2>
+        <p>Les données personnelles collectées par le site sont traitées conformément au Règlement (UE) 2016/679 du Parlement européen (RGPD) et à la loi Informatique et Libertés du 6 janvier 1978 modifiée. Vous disposez d’un droit d’accès, de rectification, d’effacement, d’opposition, de limitation du traitement de vos données et de portabilité sous réserve de conditions. Pour l’exercer, adressez-vous à contact@techwatch.fr.</p>
+
+        <h2>Cookies</h2>
+        <p>Le site utilise des cookies pour améliorer l’expérience utilisateur. Pour en savoir plus, consultez notre <a href="{{ url_for('cookies') }}">politique de cookies</a>.</p>
+
+        <h2>Responsabilité</h2>
+        <p>TechWatch met en œuvre tous les moyens raisonnables pour assurer l’exactitude des informations diffusées sur ce site, mais ne peut garantir leur exhaustivité ou leur mise à jour. TechWatch ne pourra être tenue responsable des dommages directs ou indirects, de quelque nature que ce soit, résultant de l’accès ou de l’utilisation de ce site.</p>
+    </div>
+</main>
+{% endblock %}
